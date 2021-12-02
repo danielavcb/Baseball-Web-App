@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen"/>
+    <title>Login</title>
+       <style type = text/css>
+         body {
+            font-family : Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+            font-size : 14px;
+         }
+      </style>
+</head>
+<body>
+<div>
+    <div align = "center">
+     <div style = "width : 200px; " align = "center">
+        <div style = "background-color:#ffffffff; color:#96C9D0FF; padding:3px; font-size:20px"><b>LOGIN<b></b></b></div>
+<form action="" method ="post">
+    <label>Username<br>
+        <input name = "username" type = "text" id = "username" placeholder = "write username here">
+    </label><br><br>
+    <label>Password<br>
+        <input name = "password" type = "password" id = "password" placeholder = "write password here">
+    </label><br><br>
+    <input type = "submit"><br><br>
+</form>
+</div>
+    <form action="/register">
+        <label>Create account:</label>
+            <input value="Register" type="submit">
+    </form>
+    </div>
+</div>
+</body>
+</html>

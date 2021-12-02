@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen"/>
+    <title>Homepage</title>
+    <style type = text/css>
+        tr:nth-child(even) {background-color: #f2f2f2;}
+         body {
+            font-family : Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+            font-size : 14px;
+         }
+         table {
+             width: 50%;
+         }
+   </style>
+</head>
+<body>
+    <div align = "center">
+     <div style = "width : 200px; " align = "center">
+         <div style = "background-color:#ffffffff; color:#96C9D0FF; padding:3px; font-size:20px"><b><br><br><br> HOMEPAGE <b></b></b></div>
+     </div><br>
+    </div>
+
+    <div>
+         <div width : 200px; align = "center">
+             <div style = "background-color:#ffffffff; color:#13808f; padding:3px; font-size:16px"><b> Please enter a year to view the standings <b></b></b></div>
+        <br>
+
+        <form method="post">
+            <br>
+                <input type="text" name="yearID" id="yearID" placeholder="enter a year"><br>
+            <br>
+                <br>
+                <input type="submit" value = "SUBMIT">
+        </form>
+        </div>
+    </div>
+
+    <br><br><div>
+        <div width : 200px; align = "center">
+        <form action="/stats">
+             <input type="submit" value = "Look at Stats">
+         </form>
+    </div>
+    <div>
+        <table style="margin-top: 0px; margin-left: auto; margin-right: auto">
+        <tbody>
+        <form method="post">
+            <th style="background-color:powderblue;"> AL East </th>
+            <tr>
+                <th> Team </th>
+                <th> Wins </th>
+                <th> Losses </th>
+            </tr>
+            <tr>
+                {% for row in al1 %}
+                    <tr>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                   </tr>
+                {% endfor %}
+            </tr><br><br>
+
+            <th style="background-color:powderblue;"> AL West </th>
+            <tr>
+                <th> Team </th>
+                <th> Wins </th>
+                <th> Losses </th>
+            </tr>
+            <tr>
+                {% for row in al2 %}
+                    <tr>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                   </tr>
+                {% endfor %}
+            </tr><br><br>
+
+
+            <th style="background-color:powderblue;"> AL Central </th>
+            <tr>
+                <th> Team </th>
+                <th> Wins </th>
+                <th> Losses </th>
+            </tr>
+            <tr>
+                {% for row in al3 %}
+                    <tr>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                   </tr>
+                {% endfor %}
+            </tr><br><br>
+
+            <th style="background-color:powderblue;"> NL East </th>
+            <tr>
+                <th> Team </th>
+                <th> Wins </th>
+                <th> Losses </th>
+            </tr>
+            <tr>
+                {% for row in nl1 %}
+                    <tr>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                   </tr>
+                {% endfor %}
+            </tr><br><br>
+
+
+            <th style="background-color:powderblue;"> NL West </th>
+            <tr>
+                <th> Team </th>
+                <th> Wins </th>
+                <th> Losses </th>
+            </tr>
+            <tr>
+                {% for row in nl2 %}
+                    <tr>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                   </tr>
+                {% endfor %}
+            </tr><br><br>
+
+            <th style="background-color:powderblue;"> NL Central </th>
+            <tr>
+                <th> Team </th>
+                <th> Wins </th>
+                <th> Losses </th>
+            </tr>
+            <tr>
+                {% for row in nl3 %}
+                    <tr>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                   </tr>
+                {% endfor %}
+            </tr>
+        </form>
+        </tbody>
+        </table>
+
+    </div>
+    </div>
+</body>
+</html>

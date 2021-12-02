@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen"/>
+    <title>Profile</title>
+    <style type = text/css>
+         body {
+            font-family : Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+            font-size : 14px;
+         }
+    </style>
+</head>
+<body>
+<div>
+            <div align = "center">
+     <div style = "width : 200px; " align = "center">
+         <div style = "background-color:#ffffffff; color:#96C9D0FF; padding:3px; font-size:20px"><b>WELCOME! <b></b></b></div>
+     </div><br>
+
+<div>
+    <form method="post">
+        <label>Change Favorite Team<br>
+            <input type="text" name="change_team" id="change_team" placeholder="enter a favorite team"><br>
+        </label><br>
+
+        <label>Change Year<br>
+            <input type="text" name="yearID" id="yearID" placeholder="input a year"><br>
+        </label><br>
+
+        <table>
+        <tbody>
+            <tr>
+                {% for row in roster %}
+                    <tr>
+                        <td> {{ row }} </td>
+                   </tr>
+                {% endfor %}
+            </tr>
+        </tbody>
+        </table>
+
+        </label><br>
+        <input type="submit" value = "Enter Homepage">
+    </form>
+</div>
+</div>
+</div>
+</body>
+</html>

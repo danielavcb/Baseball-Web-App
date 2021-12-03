@@ -15,10 +15,6 @@ app.config['MYSQL_DB'] = 'designerds'
 
 sql = MySQL(app)
 
-# # login configuration
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-
 # PAGE RUN
 if __name__ == '__main__':
     app.run(debug=True)
@@ -34,18 +30,16 @@ def requesting():
             user = request.form['username']
             password = request.form['password']
 
-            global username
-            username = (user)
-
             cur = sql.connection.cursor()
             code = "SELECT * FROM login_info " \
                    "WHERE username = %s AND password = %s"
+
             # execute the sql code
             cur.execute(code, (user, password))
 
+            global username
             # select row that matches the username and password
             sel = cur.fetchone()
-
             username = sel[1]
 
             # if a row is returned, go to user's profile
@@ -85,30 +79,45 @@ def reg():
 def profile():
     cur1 = sql.connection.cursor()
 
-    # # if the homepage button is clicked, redirect user to there
-    # cur1.execute("select concat(nameFirst, ' ', nameLast) as Name, abs(coalesce(deathYear, 2021) - birthYear)"\
-    # "as Age, concat(birthCity, ', ', birthState, ', ', birthCountry) as 'Birth Place', case when b.AB > 0 then 'Y' else 'N' end as 'Batter', case when NOT exists (select p.playerID from pitching p where p.playerID = b.playerID)"\
-    # "then 'N' else 'Y' end as 'Pitcher' from pitching p1, people p, batting b where b.playerID = p.playerID and b.yearID = 2020"\
-    # "and p1.yearID = b.yearID and b.name = (SELECT name FROM teams WHERE name = (SELECT favorite FROM login_info WHERE username = %s ))"\
-    # "group by b.playerID", (username, ))
+    # if the homepage button is clicked, redirect user to there
+    cur1.execute("select concat(nameFirst, ' ', nameLast) as Name, concat(birthCity, ', ', birthState, ', ', birthCountry) as 'Birth Place', "
+                 "case when deathYear = 0 then (2021 - birthYear) else (deathYear - birthYear) end as 'Age', case when b.AB > 0 then 'Y' else 'N' "
+                 "end as 'Batter', case when NOT exists (select p.playerID from pitching p where p.playerID = b.playerID) then 'N' else 'Y' end as 'Pitcher' "
+                 "from pitching p1, people p, batting b where b.playerID = p.playerID and b.yearID = 2020 and p1.yearID = b.yearID and b.teamID = (SELECT teamID "
+                 "FROM teams WHERE name = (SELECT favorite FROM login_info WHERE username = %s) LIMIT 1) group by b.playerID", (username, ))
 
-    # cur1.execute("select concat(nameFirst, ' ', nameLast) as Name, abs(coalesce(deathYear, 2021) - birthYear) as Age, concat(birthCity, ', ', birthState, ', ', birthCountry) as 'Birth Place', case when b.AB > 0 then 'Y' else 'N' end as 'Batter', case when NOT exists (select p.playerID from pitching p where p.playerID = b.playerID) then 'N' else 'Y' end as 'Pitcher' from pitching p1, people p, batting b where b.playerID = p.playerID and b.yearID = 2019 and p1.yearID = b.yearID and b.teamID = 'NYA' group by b.playerID")
-
-    #roster = cur1.fetchall()
 
     if request.method == 'POST':
-        team = request.form["change_team"]
-        cur = sql.connection.cursor()
+        if "year_change" in request.form:
+            new_year = request.form["yearID"]
 
-        # giving user the option to change favorite team
-        cur.execute("UPDATE login_info SET favorite = %s WHERE username = %s", (team, username, ))
+            cur1.execute("select concat(nameFirst, ' ', nameLast) as Name, concat(birthCity, ', ', birthState, ', ', birthCountry) as 'Birth Place', "
+                        "case when deathYear = 0 then (2021 - birthYear) else (deathYear - birthYear) end as 'Age', case when b.AB > 0 then 'Y' else 'N' "
+                        "end as 'Batter', case when NOT exists (select p.playerID from pitching p where p.playerID = b.playerID) then 'N' else 'Y' end as 'Pitcher' "
+                        "from pitching p1, people p, batting b where b.playerID = p.playerID and b.yearID = %s and p1.yearID = b.yearID and b.teamID = (SELECT teamID "
+                        "FROM teams WHERE name = (SELECT favorite FROM login_info WHERE username = %s) LIMIT 1) group by b.playerID",
+                        (new_year, username, ))
 
-        # committing these changes into the database
-        sql.connection.commit()
-        cur.close()
+        elif "fav_team" in request.form:
+            team = request.form["change_team"]
 
-        return redirect(url_for('homepage'))
-    return render_template('profile.html', title='Profile')
+            cur3 = sql.connection.cursor()
+
+            # giving user the option to change favorite team
+            cur3.execute("UPDATE login_info SET favorite = %s WHERE username = %s", (team, username, ))
+
+            cur1.execute("select concat(nameFirst, ' ', nameLast) as Name, concat(birthCity, ', ', birthState, ', ', birthCountry) as 'Birth Place', "
+                        "case when deathYear = 0 then (2021 - birthYear) else (deathYear - birthYear) end as 'Age', case when b.AB > 0 then 'Y' else 'N' "
+                        "end as 'Batter', case when NOT exists (select p.playerID from pitching p where p.playerID = b.playerID) then 'N' else 'Y' end as 'Pitcher' "
+                        "from pitching p1, people p, batting b where b.playerID = p.playerID and b.yearID = 2020 and p1.yearID = b.yearID and b.teamID = (SELECT teamID "
+                        "FROM teams WHERE name = (SELECT favorite FROM login_info WHERE username = %s) LIMIT 1) group by b.playerID",
+                        (username,))
+        else:
+            return redirect(url_for('homepage'))
+    # committing these changes into the database
+    sql.connection.commit()
+    roster = cur1.fetchall()
+    return render_template('profile.html', title='Profile', roster=roster)
 
 @app.route('/stats', methods=['GET', 'POST'])
 def stats():
@@ -118,9 +127,6 @@ def stats():
 # defining the homepage
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
-
-    cur_al1_0 = sql.connection.cursor()
-
     cur_al1 = sql.connection.cursor()
     cur_al2 = sql.connection.cursor()
     cur_al3 = sql.connection.cursor()
@@ -128,6 +134,8 @@ def homepage():
     cur_nl1 = sql.connection.cursor()
     cur_nl2 = sql.connection.cursor()
     cur_nl3 = sql.connection.cursor()
+
+    winner = sql.connection.cursor()
 
     cur_al1.execute("select t1.teamID, concat(t1.W, '-', t1.l) as '', (((t0.W-t1.W)+(t1.L-t0.L))/2) as GB from teams t1 JOIN teams t0 USING (divID) where divID = 'E' " \
                     "and t0.teamID = (SELECT teamID from teams WHERE yearID = 2020 AND divID = 'E' ORDER BY (W/G) DESC LIMIT 1)" \
@@ -152,6 +160,9 @@ def homepage():
     cur_nl3.execute("select t1.teamID, concat(t1.W, '-', t1.l) as '', (((t0.W-t1.W)+(t1.L-t0.L))/2) as GB from teams t1 JOIN teams t0 USING (divID) where divID = 'C' " \
                     "and t0.teamID = (SELECT teamID from teams WHERE yearID = 2020 AND divID = 'C' ORDER BY (W/G) DESC LIMIT 1)" \
                     "and t1.yearID = 2020 and t0.yearID = 2020 and t1.lgID = 'NL' order by GB asc")
+
+    winner.execute("select round as Round, teamIDwinner as Winner, concat(wins,'-', losses) as '', teamIDloser as Loser, concat(losses, '-', wins) as '' "
+                   "from seriespost where yearID = 2020 group by round")
 
     if request.method == 'POST':
         yearID = request.form["yearID"]
@@ -179,6 +190,8 @@ def homepage():
         cur_nl3.execute("select t1.teamID, concat(t1.W, '-', t1.l) as '', (((t0.W-t1.W)+(t1.L-t0.L))/2) as GB from teams t1 JOIN teams t0 USING (divID) where divID = 'C' " \
                         "and t0.teamID = (SELECT teamID from teams WHERE yearID = %s AND divID = 'C' ORDER BY (W/G) DESC LIMIT 1)" \
                         "and t1.yearID = %s and t0.yearID = %s and t1.lgID = 'NL' order by GB asc", (yearID, yearID, yearID,))
+        winner.execute("select round as Round, teamIDwinner as Winner, concat(wins,'-', losses) as '', teamIDloser as Loser, concat(losses, '-', wins) as '' "
+                       "from seriespost where yearID = %s group by round", (yearID, ))
 
     data_al1 = cur_al1.fetchall()
     data_al2 = cur_al2.fetchall()
@@ -188,5 +201,7 @@ def homepage():
     data_nl2 = cur_nl2.fetchall()
     data_nl3 = cur_nl3.fetchall()
 
+    data_winner = winner.fetchall()
+
     return render_template('homepage.html', title='Homepage', al1 = data_al1, al2 = data_al2, al3 = data_al3,
-                           nl1 = data_nl1, nl2 = data_nl2, nl3 = data_nl3)
+                           nl1 = data_nl1, nl2 = data_nl2, nl3 = data_nl3, win = data_winner)

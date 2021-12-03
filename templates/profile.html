@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen"/>
     <title>Profile</title>
     <style type = text/css>
+        tr:nth-child(even) {background-color: #f2f2f2;}
          body {
             font-family : Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
             font-size : 14px;
@@ -13,38 +13,51 @@
 </head>
 <body>
 <div>
-            <div align = "center">
-     <div style = "width : 200px; " align = "center">
-         <div style = "background-color:#ffffffff; color:#96C9D0FF; padding:3px; font-size:20px"><b>WELCOME! <b></b></b></div>
-     </div><br>
+        <div align = "center">
+            <div style = "background-color:#ffffffff; color:#96C9D0FF; padding:3px; font-size:20px"><b>WELCOME! <b></b></b></div>
+            <br>
 
-<div>
-    <form method="post">
-        <label>Change Favorite Team<br>
-            <input type="text" name="change_team" id="change_team" placeholder="enter a favorite team"><br>
-        </label><br>
+            <form action="" method="post">
+                <div>
+                <label>Change Favorite Team</label><br>
+                    <input type="text" name="change_team" id="change_team" placeholder="enter a favorite team"><br>
+                <br>
+                    <input type="submit" value = "Submit Changes" name = "fav_team" ><br><br>
 
-        <label>Change Year<br>
-            <input type="text" name="yearID" id="yearID" placeholder="input a year"><br>
-        </label><br>
+                <label>Change Year</label><br>
+                    <input type="text" name="yearID" id="yearID" placeholder="input a year"><br>
+                <br>
+                    <input type="submit" value = "Submit Changes" name = "year_change">
+                </div>
+            </form>
 
-        <table>
-        <tbody>
+            <form action="/homepage">
+            </label><br>
+                <input type="submit" value = "Enter Homepage">
+            </form>
+
+            <table>
+            <th style="background-color:powderblue"> ROSTER FOR YOUR FAVORITE TEAM </th>
+            <tr>
+                <th> Player Name </th>
+                <th> Birth Place </th>
+                <th> Age </th>
+                <th> Hitter </th>
+                <th> Pitcher </th>
+            </tr>
             <tr>
                 {% for row in roster %}
                     <tr>
-                        <td> {{ row }} </td>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                        <td> {{ row[3] }} </td>
+                        <td> {{ row[4] }} </td>
                    </tr>
                 {% endfor %}
-            </tr>
-        </tbody>
-        </table>
-
-        </label><br>
-        <input type="submit" value = "Enter Homepage">
-    </form>
-</div>
-</div>
+            </tr><br><br>
+            </table>
+        </div>
 </div>
 </body>
 </html>

@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" media="screen"/>
     <title>Homepage</title>
-    <style type = text/css>
-        tr:nth-child(even) {background-color: #f2f2f2;}
+    <style type = "text/css">
+        tr:nth-child(even){background-color: #f2f2f2;}
+
          body {
+            background-image: url(teamslogos.png);
+            background-repeat: repeat-y;
             font-family : Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
             font-size : 14px;
+         }
+
+         div{
+             background: none;
          }
          table {
              width: 50%;
@@ -17,34 +23,20 @@
 </head>
 <body>
     <div align = "center">
-     <div style = "width : 200px; " align = "center">
-         <div style = "background-color:#ffffffff; color:#96C9D0FF; padding:3px; font-size:20px"><b><br><br><br> HOMEPAGE <b></b></b></div>
-     </div><br>
-    </div>
+         <div style =  "color:#96C9D0FF; font-size:20px"><b><br><br><br> HOMEPAGE <b></b></b></div>
 
     <div>
-         <div width : 200px; align = "center">
-             <div style = "background-color:#ffffffff; color:#13808f; padding:3px; font-size:16px"><b> Please enter a year to view the standings <b></b></b></div>
+         <div>
+             <div style = "color:#13808f; padding:3px; font-size:16px"><b><b></b> Please enter a year to view the standings <b></b></b></div>
         <br>
-
         <form method="post">
-            <br>
-                <input type="text" name="yearID" id="yearID" placeholder="enter a year"><br>
-            <br>
-                <br>
-                <input type="submit" value = "SUBMIT">
+                <input type="text" name="yearID" id="yearID" placeholder="enter a year">
+                <br><br>
+                <input type="submit" value = "SUBMIT"><br><br>
         </form>
         </div>
     </div>
-
-    <br><br><div>
-        <div width : 200px; align = "center">
-        <form action="/stats">
-             <input type="submit" value = "Look at Stats">
-         </form>
-    </div>
-    <div>
-        <table style="margin-top: 0px; margin-left: auto; margin-right: auto">
+    <table>
         <tbody>
         <form method="post">
             <th style="background-color:powderblue;"> AL East </th>
@@ -59,7 +51,7 @@
                         <td> {{ row[0] }} </td>
                         <td> {{ row[1] }} </td>
                         <td> {{ row[2] }} </td>
-                   </tr>
+                    </tr>
                 {% endfor %}
             </tr><br><br>
 
@@ -75,7 +67,7 @@
                         <td> {{ row[0] }} </td>
                         <td> {{ row[1] }} </td>
                         <td> {{ row[2] }} </td>
-                   </tr>
+                    </tr>
                 {% endfor %}
             </tr><br><br>
 
@@ -92,7 +84,7 @@
                         <td> {{ row[0] }} </td>
                         <td> {{ row[1] }} </td>
                         <td> {{ row[2] }} </td>
-                   </tr>
+                    </tr>
                 {% endfor %}
             </tr><br><br>
 
@@ -108,7 +100,7 @@
                         <td> {{ row[0] }} </td>
                         <td> {{ row[1] }} </td>
                         <td> {{ row[2] }} </td>
-                   </tr>
+                    </tr>
                 {% endfor %}
             </tr><br><br>
 
@@ -125,7 +117,7 @@
                         <td> {{ row[0] }} </td>
                         <td> {{ row[1] }} </td>
                         <td> {{ row[2] }} </td>
-                   </tr>
+                    </tr>
                 {% endfor %}
             </tr><br><br>
 
@@ -141,12 +133,28 @@
                         <td> {{ row[0] }} </td>
                         <td> {{ row[1] }} </td>
                         <td> {{ row[2] }} </td>
-                   </tr>
+                    </tr>
+                {% endfor %}
+            </tr>
+
+            <th style="background-color:powderblue;"> WINNING STATS </th>
+            <tr>
+                <th> Round </th>
+                <th> Winner </th>
+                <th> Loser </th>
+            </tr>
+            <tr>
+                {% for row in win %}
+                    <tr>
+                        <td> {{ row[0] }} </td>
+                        <td> {{ row[1] }} </td>
+                        <td> {{ row[2] }} </td>
+                    </tr>
                 {% endfor %}
             </tr>
         </form>
-        </tbody>
-        </table>
+    </tbody>
+    </table>
 
     </div>
     </div>
